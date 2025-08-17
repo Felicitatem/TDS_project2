@@ -1,0 +1,95 @@
+
+[2025-08-18 03:20:29]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 03:20:29]
+📜 Executing Code:
+import pandas as pd
+import os
+
+# Define file paths
+metadata_file = "uploads/40e49a31-0e55-41bd-bad9-8d0fe33b8839/metadata.txt"
+
+# Ensure the directory exists
+os.makedirs(os.path.dirname(metadata_file), exist_ok=True)
+
+# Read the first 3 rows of the CSV
+df = pd.read_csv("sample-sales.csv")
+preview = df.head(3).to_string()
+
+# Append the preview to the metadata file
+with open(metadata_file, "a") as f:
+    f.write("CSV Preview:\n")
+    f.write(preview + "\n")
+
+print(f"Successfully wrote preview to {metadata_file}")
+
+----------------------------------------
+
+[2025-08-18 03:20:33]
+❌ Execution error:
+Traceback (most recent call last):
+  File "/home/felicia/TDS_project2/uploads/40e49a31-0e55-41bd-bad9-8d0fe33b8839/job_/script.py", line 11, in <module>
+    df = pd.read_csv('sample-sales.csv')
+  File "/home/felicia/TDS_project2/venv1/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/felicia/TDS_project2/venv1/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/home/felicia/TDS_project2/venv1/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/felicia/TDS_project2/venv1/lib/python3.13/site-packages/pandas/io/parsers/readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ~~~~~~~~~~^
+        f,
+        ^^
+    ...<6 lines>...
+        storage_options=self.options.get("storage_options", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/felicia/TDS_project2/venv1/lib/python3.13/site-packages/pandas/io/common.py", line 873, in get_handle
+    handle = open(
+        handle,
+    ...<3 lines>...
+        newline="",
+    )
+FileNotFoundError: [Errno 2] No such file or directory: 'sample-sales.csv'
+
+----------------------------------------
+
+[2025-08-18 03:20:40]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 03:20:40]
+📜 Executing Code:
+import pandas as pd
+import os
+
+# Define file paths
+csv_file = "uploads/40e49a31-0e55-41bd-bad9-8d0fe33b8839/sample-sales.csv"
+metadata_file = "uploads/40e49a31-0e55-41bd-bad9-8d0fe33b8839/metadata.txt"
+
+# Ensure the directory exists
+os.makedirs(os.path.dirname(metadata_file), exist_ok=True)
+
+# Read the first 3 rows of the CSV
+df = pd.read_csv(csv_file)
+preview = df.head(3).to_string()
+
+# Append the preview to the metadata file
+with open(metadata_file, "a") as f:
+    f.write("CSV Preview:\n")
+    f.write(preview + "\n")
+
+print(f"Successfully wrote preview to {metadata_file}")
+
+----------------------------------------
+
+[2025-08-18 03:20:44]
+✅ Code executed successfully:
+Successfully wrote preview to uploads/40e49a31-0e55-41bd-bad9-8d0fe33b8839/metadata.txt
+
+----------------------------------------

@@ -1,0 +1,2 @@
+High court with most cases (2019-2022): 9_13
+Regression slope for court 33_10: -27.61059884277317

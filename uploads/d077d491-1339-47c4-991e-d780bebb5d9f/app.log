@@ -1,0 +1,33 @@
+2025-08-18 03:13:22,156 [INFO] Step-1: Folder created: uploads/d077d491-1339-47c4-991e-d780bebb5d9f
+2025-08-18 03:13:22,178 [INFO] Using Python executable: venv/bin/python3
+2025-08-18 03:13:22,179 [INFO] Step-2: File sent {'question.txt': 'uploads/d077d491-1339-47c4-991e-d780bebb5d9f/question.txt'}
+2025-08-18 03:13:22,180 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 0
+2025-08-18 03:13:31,773 [INFO] 🤖 Step-1: Successfully parsed response from LLM.
+2025-08-18 03:13:31,774 [INFO] 💻 Step-3: Entering loop
+2025-08-18 03:13:31,775 [INFO] 💻 Loop-1: Running LLM code.
+2025-08-18 03:13:48,447 [INFO] ✅💻 Loop-1: Code executed successfully.
+2025-08-18 03:13:48,448 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 03:14:03,716 [INFO] 💻 Loop-2: Running LLM code.
+2025-08-18 03:14:13,998 [ERROR] ❌💻 Loop-2: Code execution failed: 6 columns The above exception was the direct cause of the following exception: Traceback (most recent call last): File "/home/felicia/TDS_project2/uploads/d077d491-1339-47c4-991e-d780bebb5d9f/job_/script.py", line 20, in <module> df = pd.DataFrame(data, columns=headers) File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/frame.py", line 851, in __init__ arrays, columns, index = nested_data_to_arrays( ~~~~~~~~~~~~~~~~~~~~~^ # error: Argument 3 to "nested_data_to_arrays" has incompatible ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ...<4 lines>... dtype, ^^^^^^ ) ^ File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/internals/construction.py", line 520, in nested_data_to_arrays arrays, columns = to_arrays(data, columns, dtype=dtype) ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^ File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/internals/construction.py", line 845, in to_arrays content, columns = _finalize_columns_and_data(arr, columns, dtype) ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^ File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/internals/construction.py", line 942, in _finalize_columns_and_data raise ValueError(err) from err ValueError: 56 columns passed, passed data had 6 columns
+2025-08-18 03:14:13,998 [INFO] 🤖 Loop-2: Inside Loop LLM call.
+2025-08-18 03:14:40,379 [INFO] 💻 Loop-3: Running LLM code.
+2025-08-18 03:14:51,975 [INFO] ✅💻 Loop-3: Code executed successfully.
+2025-08-18 03:14:51,976 [INFO] 🤖 Loop-3: Inside Loop LLM call.
+2025-08-18 03:15:08,432 [INFO] 💻 Loop-4: Running LLM code.
+2025-08-18 03:15:10,380 [INFO] ✅💻 Loop-4: Code executed successfully.
+2025-08-18 03:15:10,380 [INFO] ✅📁 Loop-4: Found result files.
+2025-08-18 03:15:10,381 [INFO] 🤖 Loop-4: Checking result validity.
+2025-08-18 03:15:44,276 [INFO] 💻 Loop-4: Re-running code as per validation result.
+2025-08-18 03:15:44,276 [INFO] 💻 Loop-5: Running LLM code.
+2025-08-18 03:16:08,432 [INFO] ✅💻 Loop-5: Code executed successfully.
+2025-08-18 03:16:08,434 [INFO] ✅📁 Loop-5: Found result files.
+2025-08-18 03:16:08,436 [INFO] 🤖 Loop-5: Checking result validity.
+2025-08-18 03:17:05,793 [INFO] 💻 Loop-5: Re-running code as per validation result.
+2025-08-18 03:17:05,794 [INFO] 💻 Loop-6: Running LLM code.
+2025-08-18 03:17:38,858 [INFO] ✅💻 Loop-6: Code executed successfully.
+2025-08-18 03:17:38,859 [INFO] ✅📁 Loop-6: Found result files.
+2025-08-18 03:17:38,861 [INFO] 🤖 Loop-6: Checking result validity.
+2025-08-18 03:17:53,513 [INFO] ✅ Loop-6: Validation successful, no re-run needed.
+2025-08-18 03:17:53,514 [INFO] 💻 Step-6: Running final code.
+2025-08-18 03:17:53,673 [INFO] 📁 Step-7: Reading result.json
+2025-08-18 03:17:53,675 [INFO] ✅📁 Step-7: send result back

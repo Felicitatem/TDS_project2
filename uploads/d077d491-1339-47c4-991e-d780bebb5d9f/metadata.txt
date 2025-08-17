@@ -1,0 +1,9 @@
+--- Step 1: Basic Info ---
+Found a wikitable.
+Table Headers: ['Rank', 'Peak', 'Title', 'Worldwide gross', 'Year']
+Number of data rows (approx): 50
+Sample Row: ['1', '1', 'Avatar', '$2,923,706,026', '2009']
+--- Step 2: Data Extraction (Corrected) ---
+Successfully scraped and cleaned the data.
+Saved to uploads/d077d491-1339-47c4-991e-d780bebb5d9f/highest_grossing_films.csv.
+Data has 41 rows and 5 columns.

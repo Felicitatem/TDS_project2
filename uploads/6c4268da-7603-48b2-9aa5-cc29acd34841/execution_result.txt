@@ -1,0 +1,284 @@
+
+[2025-08-18 02:29:24]
+✅ requests already installed.
+----------------------------------------
+
+[2025-08-18 02:29:24]
+📦 Installing beautifulsoup4 ...
+----------------------------------------
+
+[2025-08-18 02:29:29]
+📜 Executing Code:
+import requests
+from bs4 import BeautifulSoup
+
+url = "https://en.wikipedia.org/wiki/List_of_highest-grossing_films"
+response = requests.get(url)
+
+soup = BeautifulSoup(response.content, "html.parser")
+
+tables = soup.find_all("table", {"class": "wikitable"})
+
+summary = "Found {} tables.\n".format(len(tables))
+
+for i, table in enumerate(tables):
+    caption = table.find("caption")
+    if caption:
+        summary += f"Table {i+1} caption: {caption.text.strip()}\n"
+    headers = [th.text.strip() for th in table.find_all("th")]
+    if headers:
+        summary += f'Table {i+1} headers: {", ".join(headers[:5])}...\n'
+
+with open("uploads/6c4268da-7603-48b2-9aa5-cc29acd34841/metadata.txt", "a") as f:
+    f.write(summary)
+
+----------------------------------------
+
+[2025-08-18 02:29:40]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 02:30:02]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 02:30:02]
+✅ numpy already installed.
+----------------------------------------
+
+[2025-08-18 02:30:02]
+✅ matplotlib already installed.
+----------------------------------------
+
+[2025-08-18 02:30:02]
+✅ lxml already installed.
+----------------------------------------
+
+[2025-08-18 02:30:03]
+📜 Executing Code:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+import base64
+import json
+import re
+
+url = "https://en.wikipedia.org/wiki/List_of_highest-grossing_films"
+try:
+    tables = pd.read_html(url, match="Highest-grossing films")
+    df = tables[0]
+except ValueError:
+    # Fallback if match fails
+    tables = pd.read_html(url)
+    df = tables[0]
+
+
+def clean_gross(value):
+    if isinstance(value, str):
+        return int(re.sub(r"\$|\,|\[.*?]", "", value).strip())
+    return int(value)
+
+
+# Data Cleaning
+df.columns = ["Rank", "Peak", "Title", "Worldwide gross", "Year", "Reference"]
+df["Worldwide gross"] = df["Worldwide gross"].apply(clean_gross)
+df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+df["Rank"] = pd.to_numeric(df["Rank"], errors="coerce")
+df["Peak"] = pd.to_numeric(df["Peak"], errors="coerce")
+df.dropna(subset=["Year", "Rank", "Peak", "Worldwide gross"], inplace=True)
+df["Year"] = df["Year"].astype(int)
+
+# 1. How many $2 bn movies were released before 2000?
+movies_2bn_before_2000 = df[
+    (df["Worldwide gross"] >= 2_000_000_000) & (df["Year"] < 2000)
+]
+answer1 = len(movies_2bn_before_2000)
+
+# 2. Which is the earliest film that grossed over $1.5 bn?
+movies_1_5bn = df[df["Worldwide gross"] >= 1_500_000_000]
+earliest_movie = movies_1_5bn.sort_values(by="Year", ascending=True).iloc[0]
+answer2 = earliest_movie["Title"]
+
+# 3. What's the correlation between the Rank and Peak?
+correlation = df["Rank"].corr(df["Peak"])
+answer3 = correlation
+
+# 4. Draw a scatterplot of Rank and Peak
+x = df["Rank"]
+y = df["Peak"]
+plt.figure(figsize=(8, 6))
+plt.scatter(x, y, alpha=0.5)
+plt.title("Rank vs. Peak of Highest-Grossing Films")
+plt.xlabel("Rank")
+plt.ylabel("Peak")
+
+# Add regression line
+m, b = np.polyfit(x, y, 1)
+plt.plot(x, m * x + b, color="red", linestyle="--")
+
+plt.grid(True)
+plt.tight_layout()
+
+# Convert plot to base64
+buf = io.BytesIO()
+plt.savefig(buf, format="png")
+buf.seek(0)
+img_base64 = base64.b64encode(buf.read()).decode("utf-8")
+answer4 = f"data:image/png;base64,{img_base64}"
+plt.close()
+
+# Save answers to a JSON file
+final_answers = [answer1, answer2, answer3, answer4]
+with open("uploads/6c4268da-7603-48b2-9aa5-cc29acd34841/result.json", "w") as f:
+    json.dump(final_answers, f)
+
+----------------------------------------
+
+[2025-08-18 02:30:30]
+❌ Execution error:
+Matplotlib is building the font cache; this may take a moment.
+Traceback (most recent call last):
+  File "/home/felicia/TDS_project2/uploads/6c4268da-7603-48b2-9aa5-cc29acd34841/job_/script.py", line 25, in <module>
+    df['Worldwide gross'] = df['Worldwide gross'].apply(clean_gross)
+                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/series.py", line 4935, in apply
+    ).apply()
+      ~~~~~^^
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/apply.py", line 1422, in apply
+    return self.apply_standard()
+           ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/apply.py", line 1502, in apply_standard
+    mapped = obj._map_values(
+        mapper=curried, na_action=action, convert=self.convert_dtype
+    )
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/base.py", line 925, in _map_values
+    return algorithms.map_array(arr, mapper, na_action=na_action, convert=convert)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/pandas/core/algorithms.py", line 1743, in map_array
+    return lib.map_infer(values, mapper, convert=convert)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/lib.pyx", line 2999, in pandas._libs.lib.map_infer
+  File "/home/felicia/TDS_project2/uploads/6c4268da-7603-48b2-9aa5-cc29acd34841/job_/script.py", line 20, in clean_gross
+    return int(re.sub(r'\$|\,|\[.*?]', '', value).strip())
+ValueError: invalid literal for int() with base 10: 'T2257844554'
+
+----------------------------------------
+
+[2025-08-18 02:31:14]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 02:31:14]
+✅ numpy already installed.
+----------------------------------------
+
+[2025-08-18 02:31:14]
+✅ matplotlib already installed.
+----------------------------------------
+
+[2025-08-18 02:31:14]
+✅ lxml already installed.
+----------------------------------------
+
+[2025-08-18 02:31:14]
+📜 Executing Code:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+import base64
+import json
+import re
+
+url = "https://en.wikipedia.org/wiki/List_of_highest-grossing_films"
+try:
+    tables = pd.read_html(url, match="Highest-grossing films")
+    df = tables[0]
+except ValueError:
+    tables = pd.read_html(url)
+    df = tables[0]
+
+
+def clean_gross(value):
+    if isinstance(value, (int, float)):
+        return int(value)
+    if isinstance(value, str):
+        cleaned_str = re.sub(r"[^0-9]", "", value)
+        if cleaned_str:
+            return int(cleaned_str)
+    return np.nan
+
+
+if isinstance(df.columns, pd.MultiIndex):
+    df.columns = df.columns.droplevel()
+
+df.columns = ["Rank", "Peak", "Title", "Worldwide gross", "Year", "Reference"]
+df["Worldwide gross"] = df["Worldwide gross"].apply(clean_gross)
+df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+df["Rank"] = pd.to_numeric(df["Rank"], errors="coerce")
+df["Peak"] = pd.to_numeric(df["Peak"], errors="coerce")
+df.dropna(subset=["Year", "Rank", "Peak", "Worldwide gross"], inplace=True)
+df["Year"] = df["Year"].astype(int)
+
+# 1. How many $2 bn movies were released before 2000?
+movies_2bn_before_2000 = df[
+    (df["Worldwide gross"] >= 2_000_000_000) & (df["Year"] < 2000)
+]
+answer1 = len(movies_2bn_before_2000)
+
+# 2. Which is the earliest film that grossed over $1.5 bn?
+movies_1_5bn = df[df["Worldwide gross"] >= 1_500_000_000]
+earliest_movie = movies_1_5bn.sort_values(by="Year", ascending=True).iloc[0]
+answer2 = earliest_movie["Title"]
+
+# 3. What's the correlation between the Rank and Peak?
+correlation = df["Rank"].corr(df["Peak"])
+answer3 = correlation
+
+# 4. Draw a scatterplot of Rank and Peak
+x = df["Rank"]
+y = df["Peak"]
+plt.figure(figsize=(8, 6))
+plt.scatter(x, y, alpha=0.5)
+plt.title("Rank vs. Peak of Highest-Grossing Films")
+plt.xlabel("Rank")
+plt.ylabel("Peak")
+
+valid_indices = ~np.isnan(x) & ~np.isnan(y)
+x_fit = x[valid_indices]
+y_fit = y[valid_indices]
+m, b = np.polyfit(x_fit, y_fit, 1)
+plt.plot(x_fit, m * x_fit + b, color="red", linestyle="--")
+
+plt.grid(True)
+plt.tight_layout()
+
+buf = io.BytesIO()
+plt.savefig(buf, format="png")
+buf.seek(0)
+img_base64 = base64.b64encode(buf.read()).decode("utf-8")
+answer4 = f"data:image/png;base64,{img_base64}"
+plt.close()
+
+final_answers = [answer1, answer2, answer3, answer4]
+with open("uploads/6c4268da-7603-48b2-9aa5-cc29acd34841/result.json", "w") as f:
+    json.dump(final_answers, f)
+
+----------------------------------------
+
+[2025-08-18 02:31:21]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 02:31:31]
+📜 Executing Code:
+
+----------------------------------------
+
+[2025-08-18 02:31:31]
+✅ Code executed successfully:
+
+----------------------------------------
