@@ -134,5 +134,3 @@ You are an AI Python code generator for multi-step data analysis and processing.
         return json.loads(response.text)
     except:
         print(response)
-
-    
