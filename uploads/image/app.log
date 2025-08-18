@@ -1,0 +1,33 @@
+2025-08-18 04:14:26,543 [INFO] Step-1: Folder created: uploads/0416124d-6e25-4252-a2c6-f36f4bd61061
+2025-08-18 04:14:34,044 [INFO] Using Python executable: venv/bin/python3
+2025-08-18 04:14:34,045 [INFO] Step-2: File sent {'question.txt': 'uploads/0416124d-6e25-4252-a2c6-f36f4bd61061/question.txt', 'product_image.png': 'uploads/0416124d-6e25-4252-a2c6-f36f4bd61061/product_image.png', 'catalog.db': 'uploads/0416124d-6e25-4252-a2c6-f36f4bd61061/catalog.db'}
+2025-08-18 04:14:34,046 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 0
+2025-08-18 04:14:43,746 [INFO] 🤖 Step-1: Successfully parsed response from LLM.
+2025-08-18 04:14:43,746 [INFO] 💻 Step-3: Entering loop
+2025-08-18 04:14:43,746 [INFO] 💻 Loop-1: Running LLM code.
+2025-08-18 04:14:43,801 [INFO] ✅💻 Loop-1: Code executed successfully.
+2025-08-18 04:14:43,801 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 04:14:54,304 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 04:15:19,796 [INFO] 💻 Loop-2: Running LLM code.
+2025-08-18 04:15:20,819 [INFO] ✅💻 Loop-2: Code executed successfully.
+2025-08-18 04:15:20,820 [INFO] 🤖 Loop-2: Inside Loop LLM call.
+2025-08-18 04:15:34,332 [INFO] 💻 Loop-3: Running LLM code.
+2025-08-18 04:15:39,338 [INFO] ✅💻 Loop-3: Code executed successfully.
+2025-08-18 04:15:39,338 [INFO] 🤖 Loop-3: Inside Loop LLM call.
+2025-08-18 04:15:57,061 [INFO] 💻 Loop-4: Running LLM code.
+2025-08-18 04:16:10,727 [INFO] ✅💻 Loop-4: Code executed successfully.
+2025-08-18 04:16:10,727 [INFO] 🤖 Loop-4: Inside Loop LLM call.
+2025-08-18 04:16:21,644 [INFO] 💻 Loop-5: Running LLM code.
+2025-08-18 04:34:34,369 [INFO] ✅💻 Loop-5: Code executed successfully.
+2025-08-18 04:34:34,370 [INFO] 🤖 Loop-5: Inside Loop LLM call.
+2025-08-18 04:34:44,483 [INFO] 💻 Loop-6: Running LLM code.
+2025-08-18 04:34:53,579 [INFO] ✅💻 Loop-6: Code executed successfully.
+2025-08-18 04:34:53,580 [INFO] 🤖 Loop-6: Inside Loop LLM call.
+2025-08-18 04:35:15,414 [INFO] 💻 Loop-7: Running LLM code.
+2025-08-18 04:35:20,629 [INFO] ✅💻 Loop-7: Code executed successfully.
+2025-08-18 04:35:20,629 [INFO] ✅📁 Loop-7: Found result files.
+2025-08-18 04:35:20,629 [INFO] 🤖 Loop-7: Checking result validity.
+2025-08-18 04:35:27,702 [INFO] ✅ Loop-7: Validation successful, no re-run needed.
+2025-08-18 04:35:27,702 [INFO] 💻 Step-6: Running final code.
+2025-08-18 04:35:27,720 [INFO] 📁 Step-7: Reading result.json
+2025-08-18 04:35:27,720 [INFO] ✅📁 Step-7: send result back

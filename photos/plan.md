@@ -1,53 +1,51 @@
-# TDS_project2
-AI based Data Analyst
+# TDS Project 2 — AI Data Analyst
 
+An AI agent that sources, prepares, analyzes, and visualizes data from arbitrary inputs.
 
-### Approch1: 
+---
 
-1. give question.txt, and any other file(csv, img etc) to llm and ask for code and libraries to execute.
+## Design Evolution
 
-2. execute that code in python repl.
+### Approach 1 — Single-pass code generation
+- Provide `questions.txt` and any attachments (CSV, images, etc.) directly to the LLM and ask it to generate runnable code.
+- Execute the returned code in a Python REPL.
 
-Problem: the llm writes code assuming the names on itself which gave raise to too many errors.
+**Issue:** The LLM often assumes non-existent variable/file names, causing frequent execution errors.
 
-### Approch-2:
+---
 
-1. Step first is same. but instead of just whole code we are asking to write code to scrap or read all the data that is avaialable(or given).
+### Approach 2 — Two-stage (ingest → solve)
+1. Ask the LLM only for code to **scrape/read and normalize all available data**.  
+2. Feed the **question + the prepared outputs** back to the LLM:
+   - If the question is small/answerable directly, respond immediately.
+   - Otherwise, request solution code, execute it, and return the result.
 
-2. now gave that question statement and the ouput data to llm again and ask for possible solution which includes:
-    - if the problem is small, or chatgpt can answer that  `go ahead and do that` if not,
-    - now provide the code for that and we will execute it and answer the question accordingly.
+---
 
+### Approach 3 — Two-stage with explicit metadata handoff
+- **Stage 1 (Ingestion):** Ask the LLM for scraping/reading code that also writes a `metadata.txt` capturing:
+  - Dataset metadata (schemas/shapes, column descriptions).
+  - Important file paths and what each file contains.
+  - The original questions.
+  - The **expected JSON response format**.
+- **Stage 2 (Solve):** Call the LLM again with only the **file paths + metadata**, asking for solution code that returns JSON in the specified format.
 
-### Approch-3(little modification in approch-2):
- - instead of handing over all the scraped data and question statement to llm again. We done this:
-    -   ask first llm to give code for scraping the data and created metadata.txt file that has:
-        - metadata of scraped data.
-        - important file paths and description of file.
-        - asked questions .
-        - json format for giving answers.
+**Execution robustness:** Allow the LLM up to **3 automatic retries** to fix minor code errors detected at runtime.
 
- - Second llm call gets all the data file paths along with metadata. so this llm tries to generated code for solving them and returning a json based on provided format.
+---
 
-`Note: Sometimes the llm generated code has little mistakes. so, i decided to give llm 3 chances to correct that.`
+### Approach 4 — Improving answer quality
+Some models (e.g., Gemini in tests) can be inconsistent for certain requests.  
+- Strategy: generate **multiple candidate answers** via separate LLM calls and select the best based on simple validation/quality checks.
 
-### Approch-4: Trying to get a good score
-- Currently gemini gives bad result for some requests. 
-    - possible approch: send multiple llm calls and choose the best result.
+---
 
-### New finding:
-- Try to mimic your way of getting solution from llm.
-    - my way:
-        - ask for code --> error occurs in code.
-        - sends the error code. Not the whole question.
-- `Solution: implement chats `
-    - send only the part where llm made mistake and get answers.
-    - `Plus point: `
-    - If we got a working code. But the outputs are wrong, meaning llm gave wrong logic.
-        - How to check llm gave wrong logic code. `empty files`
-    - ask again
-    - `Bonus`: uses less Tokens. Don't have to send again the question statement again.
+## Iterative Chat Strategy (Key Insight)
+Maintain a **single chat session** and iterate step-by-step:
+- Send only the **minimal failing context** (e.g., the error message and the code fragment), not the entire question each time.
+- Benefits:
+  - Faster iterations and **lower token usage**.
+  - Tighter feedback loop: focus on the precise mistake.
+- Logic validation:
+  - Even if code runs, detect likely wrong logic via **empty or obviously invalid outputs** and request a targeted fix.
 
-### Matain a single chat session and ask them for code step by step, if some steps has faulty code ask again.
-
- 

@@ -1,0 +1,62 @@
+--- employees.csv preview ---
+      Name   Department  Salary
+0    Alice        Sales   70000
+1      Bob  Engineering   90000
+2  Charlie        Sales   72000
+
+--- annual_report.pdf preview ---
+Annual
+ 
+Report
+ 
+FY2023
+ 
+ 
+ 
+This
+ 
+company
+ 
+focuses
+ 
+on
+ 
+providing
+ 
+services
+ 
+as
+ 
+shitty
+ 
+as
+ 
+shit.
+ 
+ 
+Revenue
+ 
+ 
+$5.2M
+ 
+ 
+Net
+ 
+Profit
+ 
+ 
+$1.2M
+ 
+Headcount
+ 
+120
+ 
+employees
+ 
+ 
+
+--- Analysis Results Summary ---
+Average Salary per Department: {"Engineering": 89000.0, "HR": 65000.0, "Sales": 71000.0}
+Extracted Revenue: $5.2M
+Extracted Net Profit: $1.2M
+Pie chart has been generated and encoded.

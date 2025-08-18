@@ -1,0 +1,11 @@
+{
+  "product_name": "SCIENCE FICTION NOVEL",
+  "db_info": {
+    "error": "No tables found in database."
+  },
+  "wiki_top_books": [
+    "A Tale of Two Cities",
+    "The Little Prince",
+    "The Alchemist (novel)"
+  ]
+}

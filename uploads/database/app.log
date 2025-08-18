@@ -1,0 +1,22 @@
+2025-08-18 13:12:30,019 [INFO] Step-1: Folder created: uploads/ca056cee-a218-4272-8594-ef5c1a80f305
+2025-08-18 13:12:30,040 [INFO] Using Python executable: venv/bin/python3
+2025-08-18 13:12:30,041 [INFO] Step-2: File sent {'retail.db': 'uploads/ca056cee-a218-4272-8594-ef5c1a80f305/retail.db', 'questions.txt': 'uploads/ca056cee-a218-4272-8594-ef5c1a80f305/questions.txt'}
+2025-08-18 13:12:30,042 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 0
+2025-08-18 13:12:40,357 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 1
+2025-08-18 13:12:47,265 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 2
+2025-08-18 13:12:57,555 [INFO] 🤖 Step-1: Successfully parsed response from LLM.
+2025-08-18 13:12:57,556 [INFO] 💻 Step-3: Entering loop
+2025-08-18 13:12:57,557 [INFO] 💻 Loop-1: Running LLM code.
+2025-08-18 13:12:57,870 [INFO] ✅💻 Loop-1: Code executed successfully.
+2025-08-18 13:12:57,872 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 13:13:01,481 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 13:13:28,374 [INFO] 💻 Loop-2: Running LLM code.
+2025-08-18 13:13:30,469 [INFO] ✅💻 Loop-2: Code executed successfully.
+2025-08-18 13:13:30,469 [INFO] ✅📁 Loop-2: Found result files.
+2025-08-18 13:13:30,470 [INFO] 🤖 Loop-2: Checking result validity.
+2025-08-18 13:13:37,425 [INFO] 🤖 Loop-2: Checking result validity.
+2025-08-18 13:13:54,716 [INFO] 🤖 Loop-2: Checking result validity.
+2025-08-18 13:13:59,503 [ERROR] ❌🤖 Loop-2: Error: Could not get valid response for validation response.
+2025-08-18 13:13:59,503 [INFO] 💻 Step-6: Running final code.
+2025-08-18 13:14:00,630 [INFO] 📁 Step-7: Reading result.json
+2025-08-18 13:14:00,631 [INFO] ✅📁 Step-7: send result back

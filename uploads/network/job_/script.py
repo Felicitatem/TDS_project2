@@ -1,0 +1,89 @@
+import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
+import json
+import base64
+import io
+import collections
+
+# Load the data from the CSV file
+df = pd.read_csv('uploads/35ca14f0-19df-4e72-818a-e7bb1a13ce64/edges.csv')
+
+# Create a graph from the edge list
+G = nx.from_pandas_edgelist(df, 'source', 'target')
+
+# 1. Edge Count
+edge_count = G.number_of_edges()
+
+# 2. Highest Degree Node
+degrees = dict(G.degree())
+highest_degree_node = max(degrees, key=degrees.get) if degrees else None
+
+# 3. Average Degree
+num_nodes = G.number_of_nodes()
+if num_nodes > 0:
+    average_degree = sum(degrees.values()) / num_nodes
+else:
+    average_degree = 0
+
+# 4. Network Density
+density = nx.density(G)
+
+# 5. Shortest Path between Alice and Eve
+try:
+    if G.has_node('Alice') and G.has_node('Eve'):
+        shortest_path_alice_eve = nx.shortest_path_length(G, source='Alice', target='Eve')
+    else:
+        shortest_path_alice_eve = None
+except nx.NetworkXNoPath:
+    shortest_path_alice_eve = None
+
+# 6. Network Graph Visualization
+plt.figure(figsize=(10, 8))
+pos = nx.spring_layout(G, seed=42)  # for reproducibility
+nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=2000, edge_color='gray', font_size=12, font_weight='bold')
+plt.title('Network Graph', size=15)
+img_buf = io.BytesIO()
+plt.savefig(img_buf, format='png', bbox_inches='tight')
+img_buf.seek(0)
+network_graph_b64 = base64.b64encode(img_buf.read()).decode('utf-8')
+plt.close()
+
+# 7. Degree Distribution Visualization
+degree_sequence = sorted([d for n, d in G.degree()], reverse=True)
+degree_counts = collections.Counter(degree_sequence)
+deg, cnt = zip(*sorted(degree_counts.items()))
+
+plt.figure(figsize=(8, 6))
+plt.bar(deg, cnt, color='green')
+plt.title('Degree Distribution')
+plt.xlabel('Degree')
+plt.ylabel('Number of Nodes')
+plt.xticks(range(min(deg), max(deg) + 1))
+
+hist_buf = io.BytesIO()
+plt.savefig(hist_buf, format='png', bbox_inches='tight')
+hist_buf.seek(0)
+degree_histogram_b64 = base64.b64encode(hist_buf.read()).decode('utf-8')
+plt.close()
+
+# Final JSON object
+result = {
+    'edge_count': edge_count,
+    'highest_degree_node': highest_degree_node,
+    'average_degree': average_degree,
+    'density': density,
+    'shortest_path_alice_eve': shortest_path_alice_eve,
+    'network_graph': network_graph_b64,
+    'degree_histogram': degree_histogram_b64
+}
+
+# Save the result to a JSON file
+with open('uploads/35ca14f0-19df-4e72-818a-e7bb1a13ce64/result.json', 'w') as f:
+    json.dump(result, f, indent=4)
+
+# Append completion message to metadata
+with open('uploads/35ca14f0-19df-4e72-818a-e7bb1a13ce64/metadata.txt', 'a') as f:
+    f.write('\nAnalysis complete. result.json created.')
+
+print('Final result saved to uploads/35ca14f0-19df-4e72-818a-e7bb1a13ce64/result.json')

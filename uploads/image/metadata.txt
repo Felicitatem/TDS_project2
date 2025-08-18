@@ -1,0 +1,10 @@
+Database Tables:
+
+Image Info: Size=(1024, 1536), Format=PNG, Mode=RGB
+
+OCR Error: tesseract is not installed or it's not in your PATH. See README file for more information.. This might happen if Tesseract is not installed or not in the system's PATH.
+
+An error occurred with the Gemini Vision API: 404 models/gemini-pro-vision is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+
+An error occurred with EasyOCR: No such file: '/home/felicia/TDS_project2/uploads/0416124d-6e25-4252-a22c6-f36f4bd61061/product_image.png'
+Extracted Product Name (via EasyOCR): SCIENCE FICTION NOVEL

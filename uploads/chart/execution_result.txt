@@ -1,0 +1,341 @@
+
+[2025-08-18 11:43:40]
+✅ pytesseract already installed.
+----------------------------------------
+
+[2025-08-18 11:43:40]
+📦 Installing Pillow ...
+----------------------------------------
+
+[2025-08-18 11:43:45]
+📜 Executing Code:
+import pytesseract
+from PIL import Image
+
+try:
+    image_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/sales_chart.png"
+    text = pytesseract.image_to_string(Image.open(image_path))
+    preview = text[:200].replace("\n", " ")
+    with open("uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt", "a") as f:
+        f.write("Extracted Text Preview:\n" + preview + "\n")
+except Exception as e:
+    with open("uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt", "a") as f:
+        f.write(f"Error during text extraction: {str(e)}\n")
+
+----------------------------------------
+
+[2025-08-18 11:43:49]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 11:44:31]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 11:44:32]
+📦 Installing Pillow ...
+----------------------------------------
+
+[2025-08-18 11:44:33]
+📜 Executing Code:
+import google.generativeai as genai
+import PIL.Image
+import os
+
+API_KEY = "AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE"
+genai.configure(api_key=API_KEY)
+
+model = genai.GenerativeModel("gemini-pro-vision")
+
+image_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/sales_chart.png"
+metadata_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt"
+
+try:
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"File not found at {image_path}")
+
+    img = PIL.Image.open(image_path)
+    prompt = "Extract the table data from this image as a CSV-formatted string. The headers are 'Salesperson', 'Sales Amount', 'Sales Volume'. Do not include the chart data, only the table."
+    response = model.generate_content([prompt, img])
+
+    extracted_data = response.text.strip()
+
+    if "```" in extracted_data:
+        extracted_data = extracted_data.split("```")[1]
+        if extracted_data.startswith("csv"):
+            extracted_data = extracted_data[3:].strip()
+
+    with open(metadata_path, "a") as f:
+        f.write("Extracted Data from Image (using Gemini Vision):\n")
+        f.write(extracted_data + "\n")
+
+except FileNotFoundError as e:
+    with open(metadata_path, "a") as f:
+        f.write(f"Error: {str(e)}. Cannot proceed with analysis.\n")
+        working_dir = "uploads/794472ee-6598-4fd2-9a54-ccf4a37fc325"
+        if os.path.isdir(working_dir):
+            files = os.listdir(working_dir)
+            f.write(f"Files in directory '{working_dir}': {files}\n")
+        else:
+            f.write(f"Directory '{working_dir}' does not exist.\n")
+except Exception as e:
+    with open(metadata_path, "a") as f:
+        f.write(
+            f"An error occurred while processing the image with Gemini API: {str(e)}\n"
+        )
+
+----------------------------------------
+
+[2025-08-18 11:44:34]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 11:44:45]
+📜 Executing Code:
+import os
+
+working_dir = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325"
+metadata_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt"
+
+try:
+    if os.path.isdir(working_dir):
+        files = os.listdir(working_dir)
+        with open(metadata_path, "a") as f:
+            f.write(f"Files in directory '{working_dir}': {files}\n")
+    else:
+        with open(metadata_path, "a") as f:
+            f.write(f"Directory '{working_dir}' does not exist.\n")
+except Exception as e:
+    with open(metadata_path, "a") as f:
+        f.write(f"An error occurred while listing files: {str(e)}\n")
+
+----------------------------------------
+
+[2025-08-18 11:44:45]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 11:44:56]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 11:44:57]
+📦 Installing Pillow ...
+----------------------------------------
+
+[2025-08-18 11:44:57]
+📜 Executing Code:
+import google.generativeai as genai
+import PIL.Image
+import os
+
+API_KEY = "AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE"
+genai.configure(api_key=API_KEY)
+
+model = genai.GenerativeModel("gemini-pro-vision")
+
+# Corrected image path based on directory listing
+image_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/WhatsApp Image 2025-08-17 at 11.55.42 PM.jpeg"
+metadata_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt"
+
+try:
+    if not os.path.exists(image_path):
+        raise FileNotFoundError(f"File not found at {image_path}")
+
+    img = PIL.Image.open(image_path)
+    prompt = "Extract the table data from this image as a CSV-formatted string. The headers are 'Salesperson', 'Sales Amount', 'Sales Volume'. Do not include the chart data, only the table."
+    response = model.generate_content([prompt, img])
+
+    # Clean up the response to get only the CSV data
+    extracted_data = response.text.strip()
+    if "```" in extracted_data:
+        # Handle cases where the data is in a code block
+        data_block = extracted_data.split("```")[1]
+        if data_block.lower().startswith("csv"):
+            extracted_data = data_block[3:].strip()
+        else:
+            extracted_data = data_block.strip()
+
+    with open(metadata_path, "a") as f:
+        f.write("Extracted Data from Image (using Gemini Vision):\n")
+        f.write(extracted_data + "\n")
+
+except Exception as e:
+    with open(metadata_path, "a") as f:
+        f.write(
+            f"An error occurred while processing the image with Gemini API: {str(e)}\n"
+        )
+
+----------------------------------------
+
+[2025-08-18 11:45:03]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 11:45:16]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 11:45:16]
+📦 Installing Pillow ...
+----------------------------------------
+
+[2025-08-18 11:45:17]
+📜 Executing Code:
+import google.generativeai as genai
+import PIL.Image
+import os
+
+API_KEY = "AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE"
+genai.configure(api_key=API_KEY)
+
+# Corrected model name to a generally available vision model
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+image_path = "uploads/794472ee-698-4fd2-9a45-ccf4a37fc325/WhatsApp Image 2025-08-17 at 11.55.42 PM.jpeg"
+metadata_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt"
+
+try:
+    if not os.path.exists(image_path):
+        # Correct the path based on the previous directory listing if it fails again
+        image_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/WhatsApp Image 2025-08-17 at 11.55.42 PM.jpeg"
+        if not os.path.exists(image_path):
+            raise FileNotFoundError(f"File not found at {image_path}")
+
+    img = PIL.Image.open(image_path)
+    prompt = "From the provided image, extract the data from the table into a CSV formatted string. The headers should be 'Salesperson', 'Sales Amount', 'Sales Volume'. Do not include the title or any text outside of the table data itself."
+    response = model.generate_content([prompt, img])
+
+    # Clean up the response to get only the CSV data
+    extracted_data = response.text.strip()
+    if "```" in extracted_data:
+        data_block = extracted_data.split("```")[1]
+        if data_block.lower().startswith("csv"):
+            extracted_data = data_block[3:].strip()
+        else:
+            extracted_data = data_block.strip()
+
+    with open(metadata_path, "a") as f:
+        f.write("Extracted Data from Image (using Gemini 1.5 Flash):\n")
+        f.write(extracted_data + "\n")
+
+except Exception as e:
+    with open(metadata_path, "a") as f:
+        f.write(
+            f"An error occurred while processing the image with Gemini API: {str(e)}\n"
+        )
+
+----------------------------------------
+
+[2025-08-18 11:45:25]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 11:45:45]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 11:45:45]
+✅ numpy already installed.
+----------------------------------------
+
+[2025-08-18 11:45:45]
+✅ matplotlib already installed.
+----------------------------------------
+
+[2025-08-18 11:45:45]
+📜 Executing Code:
+import pandas as pd
+import io
+import json
+import numpy as np
+import matplotlib.pyplot as plt
+import base64
+
+# Step 1: Read the extracted data from metadata.txt
+metadata_path = "uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/metadata.txt"
+with open(metadata_path, "r") as f:
+    lines = f.readlines()
+
+# Find the start of the CSV data
+csv_data_start_index = -1
+for i, line in enumerate(lines):
+    if "Salesperson,Sales Amount,Sales Volume" in line:
+        csv_data_start_index = i
+        break
+
+if csv_data_start_index == -1:
+    raise ValueError("CSV data not found in metadata.txt")
+
+csv_data = "".join(lines[csv_data_start_index:])
+df = pd.read_csv(io.StringIO(csv_data))
+
+# Clean the data
+df["Sales Amount"] = pd.to_numeric(
+    df["Sales Amount"].astype(str).str.replace("$", "", regex=False)
+)
+df["Sales Volume"] = pd.to_numeric(df["Sales Volume"])
+
+# --- Answer the questions ---
+
+# 1. How many salespeople have a sales amount over $500?
+sales_over_500 = df[df["Sales Amount"] > 500].shape[0]
+
+# 2. Which salesperson has the highest sales volume?
+highest_volume_salesperson = df.loc[df["Sales Volume"].idxmax()]["Salesperson"]
+
+# 3. What's the correlation between the sales amount and sales volume?
+correlation = df["Sales Amount"].corr(df["Sales Volume"])
+
+# 4. Draw a scatterplot with a regression line
+plt.figure(figsize=(8, 6))
+x = df["Sales Amount"]
+y = df["Sales Volume"]
+plt.scatter(x, y)
+
+# Calculate and plot regression line
+m, b = np.polyfit(x, y, 1)
+plt.plot(x, m * x + b, color="red", linestyle="--")
+
+plt.title("Sales Amount vs. Sales Volume")
+plt.xlabel("Sales Amount ($)")
+plt.ylabel("Sales Volume")
+plt.grid(True)
+plt.tight_layout()
+
+# Save plot to a byte buffer and encode in base64
+buf = io.BytesIO()
+plt.savefig(buf, format="png")
+buf.seek(0)
+img_base64 = base64.b64encode(buf.read()).decode("utf-8")
+data_uri = f"data:image/png;base64,{img_base64}"
+buf.close()
+plt.close()
+
+# --- Combine answers and save to result.json ---
+final_answers = [sales_over_500, highest_volume_salesperson, correlation, data_uri]
+
+with open("uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/result.json", "w") as f:
+    json.dump(final_answers, f)
+
+----------------------------------------
+
+[2025-08-18 11:45:46]
+✅ Code executed successfully:
+
+----------------------------------------
+
+[2025-08-18 11:45:56]
+📜 Executing Code:
+
+----------------------------------------
+
+[2025-08-18 11:45:56]
+✅ Code executed successfully:
+
+----------------------------------------

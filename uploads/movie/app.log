@@ -1,0 +1,48 @@
+2025-08-18 11:55:00,803 [INFO] Step-1: Folder created: uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd
+2025-08-18 11:55:00,841 [INFO] Using Python executable: venv1/bin/python3
+2025-08-18 11:55:00,842 [INFO] Step-2: File sent {'question.txt': 'uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/question.txt'}
+2025-08-18 11:55:00,843 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 0
+2025-08-18 11:55:21,899 [INFO] 🤖 Step-1: Successfully parsed response from LLM.
+2025-08-18 11:55:21,899 [INFO] 💻 Step-3: Entering loop
+2025-08-18 11:55:21,900 [INFO] 💻 Loop-1: Running LLM code.
+2025-08-18 11:55:27,078 [INFO] ✅💻 Loop-1: Code executed successfully.
+2025-08-18 11:55:27,078 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 11:55:56,665 [INFO] 💻 Loop-2: Running LLM code.
+2025-08-18 11:55:59,844 [INFO] ✅💻 Loop-2: Code executed successfully.
+2025-08-18 11:55:59,845 [INFO] 🤖 Loop-2: Inside Loop LLM call.
+2025-08-18 11:56:19,798 [INFO] 💻 Loop-3: Running LLM code.
+2025-08-18 11:56:26,653 [INFO] ✅💻 Loop-3: Code executed successfully.
+2025-08-18 11:56:26,654 [INFO] 🤖 Loop-3: Inside Loop LLM call.
+2025-08-18 11:57:02,803 [INFO] 💻 Loop-4: Running LLM code.
+2025-08-18 11:57:13,619 [INFO] ✅💻 Loop-4: Code executed successfully.
+2025-08-18 11:57:13,620 [INFO] 🤖 Loop-4: Inside Loop LLM call.
+2025-08-18 11:57:16,894 [ERROR] ❌🤖 Loop-4: Error in parsing the result. ⚠️ The previous response was not valid JSON.
+Your task: Fix the issue and return a STRICTLY valid JSON object.
+Do not include explanations, text, or comments — only JSON.
+
+Error details (last 100 words):
+<error>[Errno 5] Input/output error</error>
+
+Expected JSON format:
+{
+   "code": "<python_code_here_to_run_in_REPL>",
+   "libraries": ["list", "of", "external_libraries"],
+   "run_this": 0 or 1
+}
+2025-08-18 11:57:16,895 [INFO] 🤖 Loop-4: Inside Loop LLM call.
+2025-08-18 11:57:16,896 [ERROR] ❌🤖 Loop-4: Invalid json response. ⚠️ The previous response was not valid JSON.
+Your task: Fix the issue and return a STRICTLY valid JSON object.
+Do not include explanations, text, or comments — only JSON.
+
+Error details (last 100 words):
+<error>[Errno 5] Input/output error</error>
+
+Expected JSON format:
+{
+   "code": "<python_code_here_to_run_in_REPL>",
+   "libraries": ["list", "of", "external_libraries"],
+   "run_this": 0 or 1
+}
+2025-08-18 11:57:57,389 [INFO] 💻 Loop-5: Running LLM code.
+2025-08-18 11:58:12,000 [INFO] ✅💻 Loop-5: Code executed successfully.
+2025-08-18 11:58:12,001 [INFO] ✅📁 Loop-5: Found result files.

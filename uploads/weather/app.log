@@ -1,0 +1,22 @@
+2025-08-18 11:28:37,068 [INFO] Step-1: Folder created: uploads/7aedfbbc-b309-429e-9713-72c69649a88c
+2025-08-18 11:28:37,102 [INFO] Using Python executable: venv/bin/python3
+2025-08-18 11:28:37,102 [INFO] Step-2: File sent {'sample-weather.csv': 'uploads/7aedfbbc-b309-429e-9713-72c69649a88c/sample-weather.csv', 'questions.txt': 'uploads/7aedfbbc-b309-429e-9713-72c69649a88c/questions.txt'}
+2025-08-18 11:28:37,103 [INFO] 🤖 Step-1: Getting scrap code and metadata from llm. Tries count = 0
+2025-08-18 11:28:45,154 [INFO] 🤖 Step-1: Successfully parsed response from LLM.
+2025-08-18 11:28:45,155 [INFO] 💻 Step-3: Entering loop
+2025-08-18 11:28:45,156 [INFO] 💻 Loop-1: Running LLM code.
+2025-08-18 11:28:49,493 [INFO] ✅💻 Loop-1: Code executed successfully.
+2025-08-18 11:28:49,494 [INFO] 🤖 Loop-1: Inside Loop LLM call.
+2025-08-18 11:29:08,816 [INFO] 💻 Loop-2: Running LLM code.
+2025-08-18 11:29:19,417 [ERROR] ❌💻 Loop-2: Code execution failed: ❌ Execution error: Traceback (most recent call last): File "/home/felicia/TDS_project2/uploads/7aedfbbc-b309-429e-9713-72c69649a88c/job_/script.py", line 70, in <module> json.dump(result, f, indent=4) ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^ File "/usr/lib/python3.13/json/__init__.py", line 179, in dump for chunk in iterable: ^^^^^^^^ File "/usr/lib/python3.13/json/encoder.py", line 433, in _iterencode yield from _iterencode_dict(o, _current_indent_level) File "/usr/lib/python3.13/json/encoder.py", line 407, in _iterencode_dict yield from chunks File "/usr/lib/python3.13/json/encoder.py", line 440, in _iterencode o = _default(o) File "/usr/lib/python3.13/json/encoder.py", line 180, in default raise TypeError(f'Object of type {o.__class__.__name__} ' f'is not JSON serializable') TypeError: Object of type int64 is not JSON serializable
+2025-08-18 11:29:19,419 [INFO] ✅📁 Loop-2: Found result files.
+2025-08-18 11:29:19,421 [INFO] 🤖 Loop-2: Checking result validity.
+2025-08-18 11:29:32,824 [INFO] 💻 Loop-2: Re-running code as per validation result.
+2025-08-18 11:29:32,825 [INFO] 💻 Loop-3: Running LLM code.
+2025-08-18 11:29:43,225 [INFO] ✅💻 Loop-3: Code executed successfully.
+2025-08-18 11:29:43,228 [INFO] ✅📁 Loop-3: Found result files.
+2025-08-18 11:29:43,231 [INFO] 🤖 Loop-3: Checking result validity.
+2025-08-18 11:31:05,961 [INFO] ✅ Loop-3: Validation successful, no re-run needed.
+2025-08-18 11:31:05,961 [INFO] 💻 Step-6: Running final code.
+2025-08-18 11:31:05,978 [INFO] 📁 Step-7: Reading result.json
+2025-08-18 11:31:05,978 [INFO] ✅📁 Step-7: send result back

@@ -1,0 +1,458 @@
+
+[2025-08-18 12:41:52]
+✅ pytesseract already installed.
+----------------------------------------
+
+[2025-08-18 12:41:52]
+📦 Installing Pillow ...
+----------------------------------------
+
+[2025-08-18 12:41:53]
+📜 Executing Code:
+from PIL import Image
+import pytesseract
+
+# Path to the Tesseract executable (change if necessary)
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+
+def extract_text_preview(image_path, num_lines=5):
+    """Extracts a preview of text from an image."""
+    try:
+        with Image.open(image_path) as img:
+            text = pytesseract.image_to_string(img)
+            preview = "\n".join(text.splitlines()[:num_lines])
+            return preview
+    except Exception as e:
+        return f"Error processing image: {e}"
+
+
+image_file = "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png"
+preview_text = extract_text_preview(image_file)
+
+with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/metadata.txt", "a") as f:
+    f.write(f"--- Image Preview for {image_file} ---\n")
+    f.write(preview_text)
+    f.write("\n-------------------------------------\n")
+
+print(f"Extracted preview from {image_file} and saved to metadata.txt")
+
+----------------------------------------
+
+[2025-08-18 12:41:58]
+✅ Code executed successfully:
+Extracted preview from uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png and saved to metadata.txt
+
+----------------------------------------
+
+[2025-08-18 12:52:19]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 12:52:21]
+📜 Executing Code:
+import google.generativeai as genai
+import os
+
+# Configure the Gemini API key
+genai.configure(api_key="AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE")
+
+# Create the generative model
+model = genai.GenerativeModel("gemini-pro-vision")
+
+
+# Function to get content parts from an image file
+def get_content_parts(image_path):
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+    return [{"mime_type": "image/png", "data": image_data}]
+
+
+# Get the content parts for the passbook image
+content_parts = get_content_parts(
+    "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png"
+)
+
+# Generate content with a specific prompt
+response = model.generate_content(
+    [
+        "Extract the account holder name, account number, and all transactions from this passbook image. Format the transactions as a list of JSON objects, each with 'Date', 'Description', 'Debit', 'Credit', and 'Balance' keys.",
+        content_parts[0],
+    ]
+)
+
+# Append the extracted text to metadata.txt
+with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/metadata.txt", "a") as f:
+    f.write("--- Gemini Vision API Response ---\n")
+    f.write(response.text)
+    f.write("\n-------------------------------------\n")
+
+print("Extracted text using Gemini and saved to metadata.txt")
+
+----------------------------------------
+
+[2025-08-18 12:52:28]
+❌ Execution error:
+Traceback (most recent call last):
+  File "/home/felicia/TDS_project2/uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/job_/script.py", line 20, in <module>
+    response = model.generate_content(["Extract the account holder name, account number, and all transactions from this passbook image. Format the transactions as a list of JSON objects, each with 'Date', 'Description', 'Debit', 'Credit', and 'Balance' keys.", content_parts[0]])
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/generativeai/generative_models.py", line 331, in generate_content
+    response = self._client.generate_content(
+        request,
+        **request_options,
+    )
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/ai/generativelanguage_v1beta/services/generative_service/client.py", line 835, in generate_content
+    response = rpc(
+        request,
+    ...<2 lines>...
+        metadata=metadata,
+    )
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/gapic_v1/method.py", line 131, in __call__
+    return wrapped_func(*args, **kwargs)
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/retry/retry_unary.py", line 294, in retry_wrapped_func
+    return retry_target(
+        target,
+    ...<3 lines>...
+        on_error=on_error,
+    )
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/retry/retry_unary.py", line 156, in retry_target
+    next_sleep = _retry_error_helper(
+        exc,
+    ...<6 lines>...
+        timeout,
+    )
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/retry/retry_base.py", line 214, in _retry_error_helper
+    raise final_exc from source_exc
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/retry/retry_unary.py", line 147, in retry_target
+    result = target()
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/timeout.py", line 130, in func_with_timeout
+    return func(*args, **kwargs)
+  File "/home/felicia/TDS_project2/venv/lib/python3.13/site-packages/google/api_core/grpc_helpers.py", line 78, in error_remapped_callable
+    raise exceptions.from_grpc_error(exc) from exc
+google.api_core.exceptions.NotFound: 404 models/gemini-pro-vision is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+
+----------------------------------------
+
+[2025-08-18 12:52:42]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 12:52:45]
+📜 Executing Code:
+import google.generativeai as genai
+import os
+
+# Configure the Gemini API key
+genai.configure(api_key="AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE")
+
+# Create the generative model (using a corrected, available model name)
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+
+# Function to get content parts from an image file
+def get_content_parts(image_path):
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+    return [{"mime_type": "image/png", "data": image_data}]
+
+
+# Get the content parts for the passbook image
+content_parts = get_content_parts(
+    "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png"
+)
+
+# Generate content with a specific prompt
+response = model.generate_content(
+    [
+        "Extract the account holder name, account number, and all transactions from this passbook image. Format the transactions as a list of JSON objects, each with 'Date', 'Description', 'Debit', 'Credit', and 'Balance' keys. Provide only the JSON data, no extra text or explanations.",
+        content_parts[0],
+    ]
+)
+
+# Append the extracted text to metadata.txt
+with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/metadata.txt", "a") as f:
+    f.write("--- Gemini Vision API Response ---\n")
+    f.write(response.text)
+    f.write("\n-------------------------------------\n")
+
+print("Extracted text using Gemini and saved to metadata.txt")
+
+----------------------------------------
+
+[2025-08-18 12:52:56]
+✅ Code executed successfully:
+Extracted text using Gemini and saved to metadata.txt
+
+----------------------------------------
+
+[2025-08-18 12:53:33]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 12:53:33]
+📜 Executing Code:
+import google.generativeai as genai
+import json
+import re
+
+# Configure the Gemini API key
+genai.configure(api_key="AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE")
+
+# Create the generative model
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+
+# Function to get content parts from an image file
+def get_content_parts(image_path):
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+    return [{"mime_type": "image/png", "data": image_data}]
+
+
+# Get the content parts for the passbook image
+image_path = "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png"
+content_parts = get_content_parts(image_path)
+
+# New prompt to get all required information in one JSON structure
+prompt = """
+From the provided passbook image, extract the following information and structure it as a single JSON object:
+1. "account_holder_name": The name of the account holder.
+2. "account_number": The account number.
+3. "transactions": A list of all transactions, where each transaction is a JSON object with the keys "Date", "Description", "Debit", "Credit", and "Balance".
+
+Provide ONLY the final JSON object, with no other text, comments, or markdown formatting.
+"""
+
+# Generate content
+response = model.generate_content([prompt, content_parts[0]])
+
+# Clean the response to get a valid JSON string
+cleaned_response_text = re.sub(r"```json\n|```", "", response.text).strip()
+
+# Save the raw response to metadata for debugging
+with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/metadata.txt", "a") as f:
+    f.write("--- Gemini Vision API Final Extraction Attempt ---\n")
+    f.write(cleaned_response_text)
+    f.write("\n-------------------------------------\n")
+
+# Process and save the final result
+try:
+    data = json.loads(cleaned_response_text)
+    transactions = data.get("transactions", [])
+
+    # Calculate the total credit amount
+    total_credit = 0.0
+    for tx in transactions:
+        credit_str = tx.get("Credit")
+        if credit_str:
+            try:
+                cleaned_credit_str = re.sub(r"[^\d.]", "", str(credit_str))
+                if cleaned_credit_str:
+                    total_credit += float(cleaned_credit_str)
+            except (ValueError, TypeError):
+                pass
+
+    # Prepare the final result
+    final_result = {
+        "account_holder_name": data.get("account_holder_name"),
+        "account_number": data.get("account_number"),
+        "transactions": transactions,
+        "total_credit": total_credit,
+    }
+
+    # Save the final result to result.json
+    with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/result.json", "w") as f:
+        json.dump(final_result, f, indent=4)
+
+    print("Successfully processed the passbook data and saved the result.")
+
+except (json.JSONDecodeError, AttributeError) as e:
+    error_message = f"Failed to decode or process JSON from Gemini response. Error: {e}\nResponse was:\n{cleaned_response_text}"
+    print(error_message)
+    with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/result.txt", "w") as f:
+        f.write(error_message)
+except Exception as e:
+    error_message = f"An unexpected error occurred: {e}"
+    print(error_message)
+    with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/result.txt", "w") as f:
+        f.write(error_message)
+
+----------------------------------------
+
+[2025-08-18 12:53:48]
+✅ Code executed successfully:
+Successfully processed the passbook data and saved the result.
+
+----------------------------------------
+
+[2025-08-18 12:54:09]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 12:54:09]
+📜 Executing Code:
+import google.generativeai as genai
+import json
+import re
+
+# Configure the Gemini API key
+genai.configure(api_key="AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE")
+
+# Create the generative model
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+
+# Function to get content parts from an image file
+def get_content_parts(image_path):
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+    return [{"mime_type": "image/png", "data": image_data}]
+
+
+# Get the content parts for the passbook image
+image_path = "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png"
+content_parts = get_content_parts(image_path)
+
+# Refined prompt to get all required information accurately in one JSON structure
+prompt = """
+From the provided passbook image, perform the following tasks and structure the output as a single, clean JSON object:
+1. Extract the **account holder's name** and assign it to the key `account_holder_name`.
+2. Extract the **account number** and assign it to the key `account_number`.
+3. Extract all financial transactions into a list under the key `transactions`.
+   - Each transaction must be a JSON object with the keys: "Date", "Description", "Debit", "Credit", and "Balance".
+   - **Crucially, do not create duplicate entries for transactions that appear in multiple languages. Consolidate them into a single entry, preferring the most complete information.**
+   - Ensure all monetary values are extracted correctly. Use `null` only if a value is truly absent.
+
+Return ONLY the final JSON object. Do not include any explanatory text, markdown formatting like ```json, or any other characters outside of the JSON structure.
+"""
+
+# Generate content
+response = model.generate_content([prompt, content_parts[0]])
+
+# Clean the response to get a valid JSON string
+cleaned_response_text = re.sub(r"```json\n|```", "", response.text).strip()
+
+# Save the raw response to metadata for debugging
+with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/metadata.txt", "a") as f:
+    f.write("--- Gemini Vision API Corrected Extraction Attempt ---\n")
+    f.write(cleaned_response_text)
+    f.write("\n-------------------------------------\n")
+
+# Process and save the final result
+try:
+    data = json.loads(cleaned_response_text)
+    transactions = data.get("transactions", [])
+
+    # Calculate the total credit amount
+    total_credit = 0.0
+    for tx in transactions:
+        credit_str = tx.get("Credit")
+        if credit_str:
+            try:
+                # Remove commas and convert to float
+                cleaned_credit_str = str(credit_str).replace(",", "")
+                if cleaned_credit_str:
+                    total_credit += float(cleaned_credit_str)
+            except (ValueError, TypeError):
+                pass
+
+    # Prepare the final result
+    final_result = {
+        "account_holder_name": data.get("account_holder_name", "Not Found"),
+        "account_number": data.get("account_number", "Not Found"),
+        "transactions": transactions,
+        "total_credit": total_credit,
+    }
+
+    # Save the final result to result.json
+    with open(
+        "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/result.json",
+        "w",
+        encoding="utf-8",
+    ) as f:
+        json.dump(final_result, f, indent=4, ensure_ascii=False)
+
+    print("Successfully re-processed the passbook data and saved the corrected result.")
+
+except (json.JSONDecodeError, AttributeError) as e:
+    error_message = f"Failed to decode or process JSON from Gemini response. Error: {e}\nResponse was:\n{cleaned_response_text}"
+    print(error_message)
+    with open("uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/result.txt", "w") as f:
+        f.write(error_message)
+
+----------------------------------------
+
+[2025-08-18 12:54:19]
+✅ Code executed successfully:
+Successfully re-processed the passbook data and saved the corrected result.
+
+----------------------------------------
+
+[2025-08-18 12:54:34]
+📦 Installing google-generativeai ...
+----------------------------------------
+
+[2025-08-18 12:54:34]
+📜 Executing Code:
+import google.generativeai as genai
+import json
+import re
+
+# Configure the Gemini API key
+genai.configure(api_key="AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE")
+
+# Create the generative model
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+
+# Function to get content parts from an image file
+def get_content_parts(image_path):
+    with open(image_path, "rb") as f:
+        image_data = f.read()
+    return [{"mime_type": "image/png", "data": image_data}]
+
+
+# Load the existing, partially correct data
+result_file_path = "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/result.json"
+with open(result_file_path, "r", encoding="utf-8") as f:
+    existing_data = json.load(f)
+
+# Get the content parts for the passbook image to extract the missing name
+image_path = "uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png"
+content_parts = get_content_parts(image_path)
+
+# New, highly specific prompt to extract only the account holder's name
+prompt = "From the provided passbook image, what is the Account Holder's Name? Please return only the name and nothing else."
+
+# Generate content
+response = model.generate_content([prompt, content_parts[0]])
+
+# Clean the response to get just the name
+extracted_name = response.text.strip()
+
+# Update the JSON data with the extracted name
+existing_data["account_holder_name"] = extracted_name
+
+# Save the final, complete result back to result.json
+with open(result_file_path, "w", encoding="utf-8") as f:
+    json.dump(existing_data, f, indent=4, ensure_ascii=False)
+
+print(f"Successfully extracted the account holder's name and updated the final result.")
+
+----------------------------------------
+
+[2025-08-18 12:54:43]
+✅ Code executed successfully:
+Successfully extracted the account holder's name and updated the final result.
+
+----------------------------------------
+
+[2025-08-18 12:54:54]
+📜 Executing Code:
+
+----------------------------------------
+
+[2025-08-18 12:54:54]
+✅ Code executed successfully:
+
+----------------------------------------

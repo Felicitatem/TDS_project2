@@ -1,0 +1,28 @@
+{
+    "account_holder_name": "The provided image does not contain the account holder's name.",
+    "account_number": "010203040506",
+    "transactions": [
+        {
+            "Date": "01/04/2023",
+            "Description": "ACCOUNT OPENING",
+            "Debit": null,
+            "Credit": "10000.00",
+            "Balance": null
+        },
+        {
+            "Date": "02/04/2023",
+            "Description": "CREDIT",
+            "Debit": null,
+            "Credit": "5000.00",
+            "Balance": null
+        },
+        {
+            "Date": "03/04/2023",
+            "Description": "DEBIT",
+            "Debit": "2000.00",
+            "Credit": null,
+            "Balance": null
+        }
+    ],
+    "total_credit": 15000.0
+}

@@ -197,6 +197,7 @@ Then, send result like this:
 
 [20, 25, "base64 image  url here"]
 I mean don't send answers like key:answer, unless it is specified.
+- All the uploaded files will be in the folder {request_folder}. You can access them like this {request_folder}/filename.
 """
 
 
@@ -274,9 +275,9 @@ I mean don't send answers like key:answer, unless it is specified.
     while runner == 1:
         loop_counter += 1
         # Check timeout
-        if time.time() - start_time > 500:
-            print("⏳ Timeout: 150 seconds exceeded.")
-            break
+        #if time.time() - start_time > 500:
+        #    print("⏳ Timeout: 150 seconds exceeded.")
+        #    break
 
         logger.info(f"💻 Loop-{loop_counter}: Running LLM code.")
         # Step 2: Run the generated code
@@ -384,7 +385,6 @@ I mean don't send answers like key:answer, unless it is specified.
                 logger.error(f"❌🤖 Loop-{loop_counter}: Error: Could not get valid response for validation response.")
                 print(verification)
                 runner = 0
-                break
 
             if isinstance(verification, dict):
                 code_to_run = verification.get("code", "")
@@ -395,8 +395,54 @@ I mean don't send answers like key:answer, unless it is specified.
                     continue
                 else:
                     logger.info(f"✅ Loop-{loop_counter}: Validation successful, no re-run needed.")
-                    break
-        
+                    
+            try:
+                logger.info(f"💻 Step-6: Running final code.")
+                #Running final code
+                execution_result =await run_python_code(
+                    code=code_to_run,
+                    libraries=required_libraries,
+                    folder=request_folder,
+                    python_exec=python_exec
+                )
+                if execution_result["code"] == 0:
+                    logger.error(f"❌💻 Step-6: Final code execution failed: %s", last_n_words(execution_result["output"]))
+            except Exception as e:
+                logger.error(f"❌💻 Step-6: Error occurred while running final code: %s", last_n_words(e))
+
+            # Final step: send the response back by reading the result.txt in JSON format
+            result_path = os.path.join(request_folder, "result.json")
+
+            if not os.path.exists(result_path):
+                logger.error("❌📁 Step-7: result.json not found. Storing result.txt in .json.")
+                # Checking if result.txt exists
+                result_file = os.path.join(request_folder, "result.txt")
+                
+                # Code for reading result.txt
+                with open(result_file, "r") as f:
+                    result = f.read()
+                # Change result.txt content to result.json if possible
+                try:
+                    result_path = os.path.join(request_folder, "result.json")
+                    with open(result_path, "w") as f:
+                        f.write(result)
+                except Exception as e:
+                    logger.error(f"❌📁 Step-7: Error occurred while writing result.json: %s", last_n_words(e))
+
+            
+            with open(result_path, "r") as f:
+                try:
+                    logger.info("📁 Step-7: Reading result.json")
+                    data = json.load(f)
+                    logger.info("✅📁 Step-7: send result back")
+                    return JSONResponse(content=data)
+                except Exception as e:
+                    logger.error(f"❌📁 Step-7: Error occur while sending result: %s", last_n_words(e))
+                    # Return raw content if JSON parsing fails
+                    f.seek(0)
+                    raw_content = f.read()
+                    return JSONResponse({"message": f"Error occured while processing result.json: {e}", "raw_result": raw_content})
+    
 
         # Loops to ensure we get a valid json reponse
         max_attempts = 3
@@ -448,56 +494,16 @@ I mean don't send answers like key:answer, unless it is specified.
         required_libraries = response.get("libraries", [])
         runner = response.get("run_this", 1)
 
-        
-
-    try:
-        logger.info(f"💻 Step-6: Running final code.")
-        #Running final code
-        execution_result =await run_python_code(
-            code=code_to_run,
-            libraries=required_libraries,
-            folder=request_folder,
-            python_exec=python_exec
-        )
-        if execution_result["code"] == 0:
-            logger.error(f"❌💻 Step-6: Final code execution failed: %s", last_n_words(execution_result["output"]))
-    except Exception as e:
-        logger.error(f"❌💻 Step-6: Error occurred while running final code: %s", last_n_words(e))
-
-    # Final step: send the response back by reading the result.txt in JSON format
-
-
-
-    result_path = os.path.join(request_folder, "result.json")
-
-    if not os.path.exists(result_path):
-        logger.error("❌📁 Step-7: result.json not found. Checking for result.txt.")
-        # Checking if result.txt exists
-        result_file = os.path.join(request_folder, "result.txt")
-        if not os.path.exists(result_file):
-            logger.error("❌📁 result.txt not found.")
-
-        # Code for reading result.txt
-        with open(result_file, "r") as f:
-            result = f.read()
-        # Change result.txt content to result.json if possible
-        try:
+        # If somehow it is escaping the loop, then check the result.txt or result.json should not be empty
+        if runner == 0:
             result_path = os.path.join(request_folder, "result.json")
-            with open(result_path, "w") as f:
-                f.write(result)
-        except Exception as e:
-            logger.error(f"❌📁 Step-7: Error occurred while writing result.json: %s", last_n_words(e))
 
-    else:
-        with open(result_path, "r") as f:
-            try:
-                logger.info("📁 Step-7: Reading result.json")
-                data = json.load(f)
-                logger.info("✅📁 Step-7: send result back")
-                return JSONResponse(content=data)
-            except Exception as e:
-                logger.error(f"❌📁 Step-7: Error occur while sending result: %s", last_n_words(e))
-                # Return raw content if JSON parsing fails
-                f.seek(0)
-                raw_content = f.read()
-                return JSONResponse({"message": f"Error occured while processing result.json: {e}", "raw_result": raw_content})
+            if not os.path.exists(result_path):
+                logger.error("❌📁 Step-7: result.json not found. Checking for result.txt.")
+                # Checking if result.txt exists
+                result_file = os.path.join(request_folder, "result.txt")
+                if not os.path.exists(result_file):
+                    logger.error("❌📁 result.txt not found. Creating one with blank data.")
+                    with open(result_file, "w") as f:
+                        f.write('{message:"No result found. Please start over."}')
+                    runner = 1

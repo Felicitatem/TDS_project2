@@ -1,0 +1,438 @@
+
+[2025-08-18 11:55:21]
+✅ requests already installed.
+----------------------------------------
+
+[2025-08-18 11:55:22]
+📦 Installing beautifulsoup4 ...
+----------------------------------------
+
+[2025-08-18 11:55:23]
+📜 Executing Code:
+import requests
+from bs4 import BeautifulSoup
+
+
+def get_page_summary(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, "html.parser")
+
+        summary = []
+
+        # Find the main table
+        table = soup.find("table", {"class": "wikitable sortable"})
+        if table:
+            caption = table.find("caption")
+            if caption:
+                summary.append(f"Table Caption: {caption.get_text(strip=True)}")
+
+            headers = [th.get_text(strip=True) for th in table.find_all("th")]
+            summary.append(f"Table Headers: {headers[:8]}...")  # Preview headers
+            summary.append(
+                f"This page contains a primary table listing highest-grossing films with columns for Rank, Peak, Title, Worldwide gross, Year, and Reference(s)."
+            )
+        else:
+            summary.append(
+                "No main data table found. The page might contain headings and other text."
+            )
+
+        summary_text = "\n".join(summary)
+
+        with open(
+            "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "a"
+        ) as f:
+            f.write(summary_text + "\n")
+
+        return summary_text
+
+    except requests.exceptions.RequestException as e:
+        return f"Error fetching URL: {e}"
+
+
+url = "https://en.wikipedia.org/wiki/List_of_highest-grossing_films"
+print(get_page_summary(url))
+
+----------------------------------------
+
+[2025-08-18 11:55:27]
+✅ Code executed successfully:
+No main data table found. The page might contain headings and other text.
+
+----------------------------------------
+
+[2025-08-18 11:55:56]
+✅ requests already installed.
+----------------------------------------
+
+[2025-08-18 11:55:56]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 11:55:56]
+📜 Executing Code:
+import requests
+import pandas as pd
+
+
+def download_and_save_data(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        # pandas.read_html is efficient at parsing tables from HTML
+        # It returns a list of all DataFrames found on the page.
+        tables = pd.read_html(response.text, attrs={"class": "wikitable"})
+
+        df = None
+        # We iterate through the list of tables to find the one we need.
+        # The correct table should contain 'Worldwide gross' as a column header.
+        for table in tables:
+            if "Worldwide gross" in table.columns and "Title" in table.columns:
+                df = table
+                break
+
+        if df is not None:
+            file_path = "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/highest_grossing_films.csv"
+            df.to_csv(file_path, index=False)
+
+            metadata_message = f"Successfully scraped and saved data to {file_path}.\nTable has {df.shape[0]} rows and {df.shape[1]} columns.\nPreview:\n{df.head(3).to_string()}"
+
+            with open(
+                "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "a"
+            ) as f:
+                f.write(metadata_message + "\n")
+
+            return "Data downloaded and saved successfully."
+        else:
+            error_message = "Could not find the correct table on the page."
+            with open(
+                "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "a"
+            ) as f:
+                f.write(error_message + "\n")
+            return error_message
+
+    except Exception as e:
+        error_message = f"An error occurred during data download: {e}"
+        with open(
+            "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "a"
+        ) as f:
+            f.write(error_message + "\n")
+        return error_message
+
+
+url = "https://en.wikipedia.org/wiki/List_of_highest-grossing_films"
+print(download_and_save_data(url))
+
+----------------------------------------
+
+[2025-08-18 11:55:59]
+✅ Code executed successfully:
+Could not find the correct table on the page.
+
+----------------------------------------
+
+[2025-08-18 11:56:19]
+✅ requests already installed.
+----------------------------------------
+
+[2025-08-18 11:56:20]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 11:56:20]
+📜 Executing Code:
+import requests
+import pandas as pd
+
+
+def download_and_save_data_revised(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        # Let pandas find all tables on the page without restrictive attributes
+        tables = pd.read_html(response.text)
+
+        df = None
+        # Iterate through the list of tables to find the one we need.
+        # The correct table should contain 'Worldwide gross' and 'Title' as column headers.
+        for table in tables:
+            if all(
+                col in table.columns
+                for col in ["Worldwide gross", "Title", "Year", "Rank"]
+            ):
+                df = table
+                break
+
+        if df is not None:
+            file_path = "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/highest_grossing_films.csv"
+            df.to_csv(file_path, index=False)
+
+            metadata_message = f"Successfully scraped and saved data to {file_path}.\nTable has {df.shape[0]} rows and {df.shape[1]} columns.\nPreview:\n{df.head(3).to_string()}"
+
+            with open(
+                "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "w"
+            ) as f:  # Overwrite with new status
+                f.write(metadata_message + "\n")
+
+            return "Data downloaded and saved successfully."
+        else:
+            error_message = "Could not find the correct table on the page after checking all tables."
+            with open(
+                "uploads/f9e3b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "a"
+            ) as f:
+                f.write(error_message + "\n")
+            return error_message
+
+    except Exception as e:
+        error_message = f"An error occurred during data download: {e}"
+        with open(
+            "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/metadata.txt", "a"
+        ) as f:
+            f.write(error_message + "\n")
+        return error_message
+
+
+url = "https://en.wikipedia.org/wiki/List_of_highest-grossing_films"
+print(download_and_save_data_revised(url))
+
+----------------------------------------
+
+[2025-08-18 11:56:26]
+✅ Code executed successfully:
+Data downloaded and saved successfully.
+
+----------------------------------------
+
+[2025-08-18 11:57:02]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 11:57:02]
+✅ numpy already installed.
+----------------------------------------
+
+[2025-08-18 11:57:02]
+✅ matplotlib already installed.
+----------------------------------------
+
+[2025-08-18 11:57:02]
+✅ seaborn already installed.
+----------------------------------------
+
+[2025-08-18 11:57:02]
+📜 Executing Code:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
+import json
+import re
+
+
+def solve_questions():
+    try:
+        # Step 1: Load the data from the CSV file
+        file_path = (
+            "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/highest_grossing_films.csv"
+        )
+        df = pd.read_csv(file_path)
+
+        # Step 2: Clean the data
+        # Clean 'Worldwide gross' column: remove '$', ',', and references, then convert to numeric
+        df["Worldwide gross"] = (
+            df["Worldwide gross"].astype(str).str.replace(r"\$|,", "", regex=True)
+        )
+        df["Worldwide gross"] = df["Worldwide gross"].apply(
+            lambda x: re.sub(r"\[.*\]", "", x)
+        )
+        df["Worldwide gross"] = pd.to_numeric(df["Worldwide gross"])
+
+        # Ensure 'Year', 'Rank', and 'Peak' are numeric
+        df["Year"] = pd.to_numeric(df["Year"])
+        df["Rank"] = pd.to_numeric(df["Rank"])
+        df["Peak"] = pd.to_numeric(df["Peak"])
+
+        # --- Answer Question 1 ---
+        # How many $2 bn movies were released before 2000?
+        movies_over_2bn_before_2000 = df[
+            (df["Worldwide gross"] > 2_000_000_000) & (df["Year"] < 2000)
+        ]
+        answer1 = len(movies_over_2bn_before_2000)
+
+        # --- Answer Question 2 ---
+        # Which is the earliest film that grossed over $1.5 bn?
+        movies_over_1_5bn = df[df["Worldwide gross"] > 1_500_000_000]
+        earliest_film = movies_over_1_5bn.loc[movies_over_1_5bn["Year"].idxmin()]
+        answer2 = earliest_film["Title"]
+
+        # --- Answer Question 3 ---
+        # What's the correlation between the Rank and Peak?
+        correlation = df["Rank"].corr(df["Peak"])
+        answer3 = correlation
+
+        # --- Answer Question 4 ---
+        # Draw a scatterplot of Rank and Peak with a regression line
+        plt.figure(figsize=(8, 6))
+        sns.regplot(
+            x="Rank",
+            y="Peak",
+            data=df,
+            scatter_kws={"alpha": 0.6},
+            line_kws={"color": "red", "linestyle": "--"},
+        )
+        plt.title("Rank vs. Peak of Highest-Grossing Films")
+        plt.xlabel("Current Rank")
+        plt.ylabel("Peak Rank")
+        plt.grid(True)
+
+        # Save plot to an in-memory buffer
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png", bbox_inches="tight")
+        buf.seek(0)
+
+        # Encode image to base64 and create data URI
+        image_base64 = base64.b64encode(buf.read()).decode("utf-8")
+        buf.close()
+        plt.close()
+        answer4 = f"data:image/png;base64,{image_base64}"
+
+        # --- Combine answers and save to file ---
+        final_answers = [answer1, answer2, answer3, answer4]
+
+        result_path = "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/result.json"
+        with open(result_path, "w") as f:
+            json.dump(final_answers, f)
+
+        return f"Analysis complete. Results saved to {result_path}"
+
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+
+print(solve_questions())
+
+----------------------------------------
+
+[2025-08-18 11:57:13]
+✅ Code executed successfully:
+An error occurred: Unable to parse string "T2257844554" at position 3
+
+----------------------------------------
+
+[2025-08-18 11:57:57]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 11:57:57]
+✅ numpy already installed.
+----------------------------------------
+
+[2025-08-18 11:57:57]
+✅ matplotlib already installed.
+----------------------------------------
+
+[2025-08-18 11:57:57]
+✅ seaborn already installed.
+----------------------------------------
+
+[2025-08-18 11:57:58]
+📜 Executing Code:
+import pandas as pd
+import numpy as np
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import seaborn as sns
+import io
+import base64
+import json
+
+
+def solve_questions_and_save():
+    try:
+        # Load the dataset from the specified path
+        file_path = (
+            "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/highest_grossing_films.csv"
+        )
+        df = pd.read_csv(file_path)
+
+        # Clean the 'Worldwide gross' column by removing non-digit characters and converting to a numeric type
+        df["Worldwide gross"] = (
+            df["Worldwide gross"].astype(str).str.replace(r"[^\d]", "", regex=True)
+        )
+        df["Worldwide gross"] = pd.to_numeric(df["Worldwide gross"], errors="coerce")
+        df.dropna(subset=["Worldwide gross"], inplace=True)
+
+        # Ensure required columns are of a numeric type, coercing errors to NaN
+        for col in ["Year", "Rank", "Peak"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+        df.dropna(subset=["Year", "Rank", "Peak"], inplace=True)
+
+        # Question 1: How many $2 bn movies were released before 2000?
+        movies_2bn_before_2000 = df[
+            (df["Worldwide gross"] >= 2_000_000_000) & (df["Year"] < 2000)
+        ]
+        answer1 = len(movies_2bn_before_2000)
+
+        # Question 2: Which is the earliest film that grossed over $1.5 bn?
+        movies_1_5bn = df[df["Worldwide gross"] >= 1_500_000_000]
+        earliest_film = movies_1_5bn.loc[movies_1_5bn["Year"].idxmin()]
+        answer2 = earliest_film["Title"]
+
+        # Question 3: What's the correlation between the Rank and Peak?
+        correlation = df["Rank"].corr(df["Peak"])
+        answer3 = correlation
+
+        # Question 4: Draw a scatterplot of Rank and Peak with a regression line
+        plt.figure(figsize=(10, 6))
+        sns.regplot(
+            x="Rank",
+            y="Peak",
+            data=df,
+            scatter_kws={"alpha": 0.6},
+            line_kws={"color": "red", "linestyle": "--"},
+        )
+        plt.title("Rank vs. Peak of Highest-Grossing Films")
+        plt.xlabel("Rank")
+        plt.ylabel("Peak")
+        plt.grid(True)
+
+        # Save the plot to a memory buffer
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png", bbox_inches="tight")
+        plt.close()
+        buf.seek(0)
+
+        # Encode the image in base64 to create a data URI
+        image_base64 = base64.b64encode(buf.read()).decode("utf-8")
+        buf.close()
+        answer4 = f"data:image/png;base64,{image_base64}"
+
+        # Consolidate answers and save to the final result file
+        final_answers = [answer1, answer2, answer3, answer4]
+        result_path = "uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/result.json"
+        with open(result_path, "w") as f:
+            json.dump(final_answers, f)
+
+        print(f"Successfully generated answers and saved to {result_path}")
+
+    except Exception as e:
+        # Print a descriptive error message if the process fails
+        print(f"An error occurred during analysis: {e}")
+
+
+solve_questions_and_save()
+
+----------------------------------------
+
+[2025-08-18 11:58:11]
+✅ Code executed successfully:
+Successfully generated answers and saved to uploads/f93b4f21-13c3-4143-8e0f-03c55c27bcfd/result.json
+
+----------------------------------------

@@ -1,0 +1,166 @@
+
+[2025-08-18 12:27:32]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 12:27:32]
+✅ PyPDF2 already installed.
+----------------------------------------
+
+[2025-08-18 12:27:32]
+📜 Executing Code:
+import pandas as pd
+import PyPDF2
+
+metadata_file = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/metadata.txt"
+
+# CSV Preview
+csv_path = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/employees.csv"
+try:
+    df = pd.read_csv(csv_path)
+    csv_preview = df.head(3).to_string()
+except Exception as e:
+    csv_preview = f"Error reading CSV: {e}"
+
+# PDF Preview
+pdf_path = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/annual_report.pdf"
+try:
+    with open(pdf_path, "rb") as f:
+        reader = PyPDF2.PdfReader(f)
+        if reader.pages:
+            # Extract text from the first page and limit its length for a preview
+            text = reader.pages[0].extract_text()
+            pdf_preview = (text[:500] + "...") if len(text) > 500 else text
+        else:
+            pdf_preview = "PDF has no pages."
+except Exception as e:
+    pdf_preview = f"Error reading PDF: {e}"
+
+# Append to metadata.txt
+with open(metadata_file, "a", encoding="utf-8") as f:
+    f.write("--- employees.csv preview ---\n")
+    f.write(csv_preview + "\n\n")
+    f.write("--- annual_report.pdf preview ---\n")
+    f.write(pdf_preview + "\n\n")
+
+print("Previews saved to metadata.txt")
+
+----------------------------------------
+
+[2025-08-18 12:27:35]
+✅ Code executed successfully:
+Previews saved to metadata.txt
+
+----------------------------------------
+
+[2025-08-18 12:28:06]
+✅ pandas already installed.
+----------------------------------------
+
+[2025-08-18 12:28:06]
+✅ matplotlib already installed.
+----------------------------------------
+
+[2025-08-18 12:28:06]
+✅ PyPDF2 already installed.
+----------------------------------------
+
+[2025-08-18 12:28:06]
+📜 Executing Code:
+import pandas as pd
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+import PyPDF2
+import re
+import json
+
+# Define file paths
+csv_path = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/employees.csv"
+pdf_path = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/annual_report.pdf"
+result_file = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/result.json"
+metadata_file = "uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/metadata.txt"
+
+# --- Task 1: Calculate average salary per department ---
+df = pd.read_csv(csv_path)
+average_salary = df.groupby("Department")["Salary"].mean().to_dict()
+
+# --- Task 2: Generate a pie chart of headcount by department (base64) ---
+department_counts = df["Department"].value_counts()
+plt.figure(figsize=(8, 6))
+plt.pie(
+    department_counts, labels=department_counts.index, autopct="%1.1f%%", startangle=140
+)
+plt.title("Headcount by Department")
+plt.ylabel("")  # Hide the y-axis label
+
+buf = BytesIO()
+plt.savefig(buf, format="png")
+plt.close()
+buf.seek(0)
+pie_chart_base64 = base64.b64encode(buf.read()).decode("utf-8")
+
+# --- Task 3: Extract revenue and net profit from PDF ---
+revenue = "Not found"
+net_profit = "Not found"
+
+try:
+    with open(pdf_path, "rb") as f:
+        reader = PyPDF2.PdfReader(f)
+        full_text = "".join(page.extract_text() for page in reader.pages)
+
+    # Use regex to find values, handling various whitespace characters
+    revenue_match = re.search(
+        r"Revenue\s+([\$\d\.]+[MmKkBb])", full_text, re.IGNORECASE
+    )
+    if revenue_match:
+        revenue = revenue_match.group(1)
+
+    net_profit_match = re.search(
+        r"Net\s+Profit\s+([\$\d\.]+[MmKkBb])", full_text, re.IGNORECASE
+    )
+    if net_profit_match:
+        net_profit = net_profit_match.group(1)
+except Exception as e:
+    revenue = f"Error reading PDF: {e}"
+    net_profit = f"Error reading PDF: {e}"
+
+
+# --- Combine results ---
+final_results = [
+    average_salary,
+    pie_chart_base64,
+    {"revenue": revenue, "net_profit": net_profit},
+]
+
+# --- Save final answer to result.json ---
+with open(result_file, "w") as f:
+    json.dump(final_results, f, indent=4)
+
+# --- Append summary to metadata.txt ---
+with open(metadata_file, "a", encoding="utf-8") as f:
+    f.write("--- Analysis Results Summary ---\n")
+    f.write(f"Average Salary per Department: {json.dumps(average_salary)}\n")
+    f.write(f"Extracted Revenue: {revenue}\n")
+    f.write(f"Extracted Net Profit: {net_profit}\n")
+    f.write("Pie chart has been generated and encoded.\n")
+
+print(f"Results saved to {result_file}")
+
+----------------------------------------
+
+[2025-08-18 12:28:07]
+✅ Code executed successfully:
+Results saved to uploads/1b5dc655-4068-49a9-90eb-7f66ecb2851d/result.json
+
+----------------------------------------
+
+[2025-08-18 12:28:17]
+📜 Executing Code:
+
+----------------------------------------
+
+[2025-08-18 12:28:17]
+✅ Code executed successfully:
+
+----------------------------------------

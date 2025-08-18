@@ -1,0 +1,50 @@
+Database Schema:
+
+Table: products
+  - id (INTEGER)
+  - name (TEXT)
+  - category (TEXT)
+  - price (REAL)
+
+Table: sqlite_sequence
+  - name ()
+  - seq ()
+
+Table: sales
+  - id (INTEGER)
+  - product_id (INTEGER)
+  - quantity (INTEGER)
+  - sale_date (TEXT)
+
+--- Question 1: Product Sales Quantity ---
+{
+  "Chair": 7,
+  "Laptop": 5,
+  "Mouse": 10,
+  "Table": 3
+}
+
+--- Question 2: Top 3 Categories by Revenue ---
+[
+  "Electronics",
+  "Furniture"
+]
+
+--- Question 3: Monthly Sales Chart ---
+Base64 chart generated.
+--- Question 1: Product Sales Quantity ---
+{
+  "Chair": 7,
+  "Laptop": 5,
+  "Mouse": 10,
+  "Table": 3
+}
+
+--- Question 2: Top 3 Categories by Revenue ---
+[
+  "Electronics",
+  "Furniture"
+]
+
+--- Question 3: Monthly Sales Chart ---
+Base64 chart generated.

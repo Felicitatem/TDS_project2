@@ -1,0 +1,15 @@
+Error during text extraction: [Errno 2] No such file or directory: 'uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/sales_chart.png'
+Error: File not found at uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325/sales_chart.png. Cannot proceed with analysis.
+Directory 'uploads/794472ee-6598-4fd2-9a54-ccf4a37fc325' does not exist.
+Files in directory 'uploads/794472ee-6598-4fd2-9a45-ccf4a37fc325': ['execution_result.txt', 'app.log', 'chat_history.json', 'job_', 'question.txt', 'WhatsApp Image 2025-08-17 at 11.55.42 PM.jpeg', 'metadata.txt']
+An error occurred while processing the image with Gemini API: 404 models/gemini-pro-vision is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Extracted Data from Image (using Gemini 1.5 Flash):
+Salesperson,Sales Amount,Sales Volume
+Bill,809,56
+Beck,682,24
+Bern,426,15
+Ade,258,35
+Alan,369,42
+Allen,478,17
+Bob,596,59
+Brian,287,37

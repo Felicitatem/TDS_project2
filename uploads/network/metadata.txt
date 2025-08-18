@@ -1,0 +1,6 @@
+CSV Preview:
+  source target
+0  Alice    Bob
+1  Alice  Carol
+2    Bob  Carol
+Analysis complete. result.json created.

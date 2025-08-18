@@ -1,0 +1,109 @@
+--- Image Preview for uploads/29c97177-75dd-4433-a2e1-3999d6c8303a/passbook1.png ---
+Error processing image: tesseract is not installed or it's not in your PATH. See README file for more information.
+-------------------------------------
+--- Gemini Vision API Response ---
+```json
+[
+  {
+    "Date": "01/04/2023",
+    "Description": "खाता प्रारंभ",
+    "Debit": null,
+    "Credit": "10000.00",
+    "Balance": null
+  },
+  {
+    "Date": "02/04/2023",
+    "Description": "क्रेडिट",
+    "Debit": null,
+    "Credit": "5000.00",
+    "Balance": null
+  },
+  {
+    "Date": "03/04/2023",
+    "Description": "डेबिट",
+    "Debit": "2000.00",
+    "Credit": null,
+    "Balance": null
+  }
+]
+```
+-------------------------------------
+--- Gemini Vision API Final Extraction Attempt ---
+{
+  "account_holder_name": null,
+  "account_number": "010203040506",
+  "transactions": [
+    {
+      "Date": "01/04/2023",
+      "Description": "खाता प्रारंभ",
+      "Debit": null,
+      "Credit": "10,000.00",
+      "Balance": null
+    },
+    {
+      "Date": "02/04/2023",
+      "Description": "क्रेडिट",
+      "Debit": null,
+      "Credit": "5,000.00",
+      "Balance": null
+    },
+    {
+      "Date": "03/04/2023",
+      "Description": "डेबिट",
+      "Debit": "2,000.00",
+      "Credit": null,
+      "Balance": null
+    },
+    {
+      "Date": "01/04/2023",
+      "Description": "ACCOUNT OPENING",
+      "Debit": null,
+      "Credit": null,
+      "Balance": null
+    },
+    {
+      "Date": "02/04/2023",
+      "Description": "CREDIT",
+      "Debit": null,
+      "Credit": null,
+      "Balance": null
+    },
+    {
+      "Date": "03/04/2023",
+      "Description": "DEBIT",
+      "Debit": "2,000.00",
+      "Credit": null,
+      "Balance": null
+    }
+  ]
+}
+-------------------------------------
+--- Gemini Vision API Corrected Extraction Attempt ---
+{
+  "account_holder_name": null,
+  "account_number": "010203040506",
+  "transactions": [
+    {
+      "Date": "01/04/2023",
+      "Description": "ACCOUNT OPENING",
+      "Debit": null,
+      "Credit": "10000.00",
+      "Balance": null
+    },
+    {
+      "Date": "02/04/2023",
+      "Description": "CREDIT",
+      "Debit": null,
+      "Credit": "5000.00",
+      "Balance": null
+    },
+    {
+      "Date": "03/04/2023",
+      "Description": "DEBIT",
+      "Debit": "2000.00",
+      "Credit": null,
+      "Balance": null
+    }
+  ]
+}
+-------------------------------------
