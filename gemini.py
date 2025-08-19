@@ -2,6 +2,7 @@ import os
 import json
 import google.generativeai as genai
 from api_key_rotator import get_api_key
+import re
 
 
 MODEL_NAME = "gemini-2.5-pro"
@@ -21,6 +22,9 @@ async def send_with_rotation(prompt, session_id, system_prompt):
             chat = await get_chat_session(parse_chat_sessions, session_id, system_prompt)
             response = chat.send_message(prompt)
 
+            #if '"finish_reason": "STOP"' in str(response):
+            #   print("Response finished with STOP")
+            #   continue           
             return response
 
         except Exception as e:
@@ -133,4 +137,14 @@ You are an AI Python code generator for multi-step data analysis and processing.
     try:
         return json.loads(response.text)
     except:
-        print(response)
+        # Try to extract the first {...} JSON block
+        match = re.search(r'\{.*\}', response.text, re.S)
+        if match:
+            try:
+                return json.loads(match.group(0))
+            except:
+                pass
+        print("⚠️(gemini.py) Failed to parse response as JSON, returning raw text")
+        return response.text
+
+    
