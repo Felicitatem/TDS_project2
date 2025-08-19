@@ -25,7 +25,29 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# async def get_json_from_llm(session_id: str, request_folder: str, prompt: str, logger, max_attempts: int = 3) -> dict | None:
+#     """A robust helper to get a valid JSON response from the LLM, with retries."""
+#     last_error = ""
+#     for attempt in range(max_attempts):
+#         logger.info(f"🤖 Getting response from LLM (Attempt {attempt + 1}/{max_attempts})")
+#         try:
+#             response = await parse_question_with_llm(session_id=session_id, folder=request_folder, retry_message=prompt)
+#             if isinstance(response, dict):
+#                 logger.info("🤖 Successfully parsed response from LLM.")
+#                 return response
+#             last_error = response
+#         except Exception as e:
+#             last_error = str(e)
 
+#         logger.error(f"❌🤖 LLM response was not valid JSON. Error: {last_n_words(last_error)}")
+#         prompt = (
+#             "⚠️ The previous response was not valid JSON or caused an error.\n"
+#             "Your task: Fix the issue and return a STRICTLY valid JSON object.\n"
+#             f"Error details:\n<error>{last_n_words(last_error)}</error>"
+#         )
+
+#     logger.error("❌🤖 Could not get valid response from LLM after all retries.")
+#     return None
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_frontend():
@@ -71,13 +93,13 @@ def strip_base64_from_json(data: dict) -> dict:
 
 
 # Pre-created venv paths (point to the python executable inside each venv)
-VENV_PATHS = [
-    "venv/bin/python3",
-    "venv1/bin/python3",
-    "venv2/bin/python3"
-]
+# VENV_PATHS = [
+#     "venv/bin/python3",
+#     "venv1/bin/python3",
+#     "venv2/bin/python3"
+# ]
 
-venv_cycle = itertools.cycle(VENV_PATHS)
+# venv_cycle = itertools.cycle(VENV_PATHS)
 
 @app.post("/api")
 async def analyze(request: Request):
@@ -148,8 +170,8 @@ async def analyze(request: Request):
                 async with aiofiles.open(selected_file_path, "r") as f:
                     question_text = await f.read()
 
-            python_exec = next(venv_cycle)  # pick next venv
-            logger.info("Using Python executable: %s", python_exec)
+#            python_exec = next(venv_cycle)  # pick next venv
+            # logger.info("Using Python executable: %s", python_exec)
 
             user_prompt = f"""
         I know nothing about data analytics. To solve my question, follow this exact process:
@@ -288,7 +310,7 @@ async def analyze(request: Request):
                     code=code_to_run,
                     libraries=required_libraries,
                     folder=request_folder,
-                    python_exec=python_exec
+                    # python_exec=python_exec
                 )
 
                 # Step 3: Check if execution failed
@@ -406,7 +428,7 @@ async def analyze(request: Request):
                             code=code_to_run,
                             libraries=required_libraries,
                             folder=request_folder,
-                            python_exec=python_exec
+                            # python_exec=python_exec
                         )
                         if execution_result["code"] == 0:
                             logger.error(f"❌💻 Step-6: Final code execution failed: %s", last_n_words(execution_result["output"]))
@@ -447,6 +469,13 @@ async def analyze(request: Request):
                             return JSONResponse({"message": f"Error occured while processing result.json: {e}", "raw_result": raw_content})
             
 
+        # ...is replaced by this single, clean line.
+                # initial_prompt = question_text + user_prompt
+                # response = await get_json_from_llm(session_id, request_folder, initial_prompt, logger)
+
+                # if not response:
+                #     logger.error("❌🤖 Step-1: Could not get valid response from LLM after retries.")
+                #     return JSONResponse({"message": "Error: Could not get initial plan from LLM."})
                 # Loops to ensure we get a valid json reponse
                 max_attempts = 3
                 attempt = 0
@@ -493,6 +522,7 @@ async def analyze(request: Request):
                     logger.error(f"❌🤖 Loop-{loop_counter}: Could not get valid response from LLM after retries.")
                     return JSONResponse({"message": "Error_Inside_loop_call: Could not get valid response from LLM after retries."})
 
+
                 code_to_run = response.get("code", "")
                 required_libraries = response.get("libraries", [])
                 runner = response.get("run_this", 1)
@@ -516,7 +546,6 @@ async def analyze(request: Request):
 
         main_loop += 1
 
-     
 
     
 if __name__ == "__main__":

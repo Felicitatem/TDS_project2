@@ -1,6 +1,7 @@
 import os
 import json
 import google.generativeai as genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from api_key_rotator import get_api_key
 import re
 
@@ -20,7 +21,7 @@ async def send_with_rotation(prompt, session_id, system_prompt):
             genai.configure(api_key=api_key)
 
             chat = await get_chat_session(parse_chat_sessions, session_id, system_prompt)
-            response = chat.send_message(prompt)
+            response =await chat.send_message(prompt)
 
             #if '"finish_reason": "STOP"' in str(response):
             #   print("Response finished with STOP")
@@ -40,11 +41,18 @@ async def get_chat_session(sessions_dict, session_id, system_prompt, model_name=
     if session_id not in sessions_dict:
         model = genai.GenerativeModel(
             model_name=model_name,
-            generation_config=generation_config,   # defaults for the whole chat
-            system_instruction=system_prompt       # put your system prompt here
-        )        
+            generation_config=generation_config,
+            system_instruction=system_prompt,
+            # ADD THESE SAFETY SETTINGS
+            safety_settings={
+                HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+            }
+        )
         chat = model.start_chat(history=[])
-        sessions_dict[session_id] = chat    
+        sessions_dict[session_id] = chat
     return sessions_dict[session_id]
 
 # ------------------------
@@ -67,7 +75,6 @@ You are an AI Python code generator for multi-step data analysis and processing.
 
 ## Resources
 - Primary LLM: Google Gemini
-- API Key: {"AIzaSyBxddEHeeSs8ovD4thaYLkA5tk1fo1zxFE"}
 - Working Folder: {folder}
 
 ## Capabilities
